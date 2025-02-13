@@ -1,0 +1,72 @@
+﻿@model IEnumerable<GorevYoneticisi.Models.Gorev>
+@using GorevYoneticisi.Models
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2 class="textcenter">Kayıtlı Görevler</h2>
+<form method="get" action="@Url.Action("Index")" class="filter-form">
+    <div class="form-group">
+        <label for="durum">Görev Durumu:</label>
+        <select id="durum" name="durum" class="form-control">
+            <option value="">Tümü</option>
+            @foreach (var durum in Enum.GetValues(typeof(Durum)))
+            {
+                <option value="@durum">@durum</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="startDate">Başlangıç Tarihi:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="endDate">Bitiş Tarihi:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Filtrele</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().GorevAdi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Durum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().DueDate)
+            </th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GorevAdi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Durum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Düzenle", "Edit", new { id = item.GorevID }) |
+                    @Html.ActionLink("Detaylar", "Details", new { id = item.GorevID }) |
+                    @Html.ActionLink("Sil", "Delete", new { id = item.GorevID }) |
+                    @Html.ActionLink("Arşivle", "Archive", new { id = item.GorevID })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!--<button class="buton2">@Html.ActionLink("Yeni Görev Oluştur", "Create")</button> -->
+
+        <div class="yenibuton">
+            <a href="@Url.Action("Create", "Gorev")" class="btn btn-primary">Yeni Görev Oluştur</a>
+        </div>

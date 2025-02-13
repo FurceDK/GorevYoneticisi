@@ -1,0 +1,87 @@
+﻿@model GorevYoneticisi.Models.Gorev
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="ortala">Görev Düzenleyici</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="edit-container">
+    <form asp-action="Edit" class="edit-form">
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            @Html.HiddenFor(model => model.GorevID)
+            <label for="GorevAdi">Görev Adı</label>
+            @Html.EditorFor(model => model.GorevAdi, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GorevAdi, "", new { @class = "text-danger" })
+            <span class="text-danger" data-valmsg-for="GorevAdi"></span>
+        </div>
+        <div class="form-group">
+            <label for="Aciklama">Açıklama</label>
+            @Html.TextAreaFor(model => model.Aciklama, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Aciklama, "", new { @class = "text-danger" })
+            <span class="text-danger" data-valmsg-for="GorevAdi"></span>
+        </div>
+        <div class="form-group">
+            <label for="Durum">Durum</label>
+            @Html.EnumDropDownListFor(model => model.Durum, "-- Seçiniz --", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Durum, "", new { @class = "text-danger" })
+            <span class="text-danger" data-valmsg-for="GorevAdi"></span>
+        </div>
+        <div class="form-group">
+            <label for="DueDate">Tamamlanma Tarihi</label>
+            @Html.EditorFor(model => model.DueDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DueDate, "", new { @class = "text-danger" })
+            <span class="text-danger" data-valmsg-for="GorevAdi"></span>
+        </div>
+        <div class="buton2">
+            <input type="submit" value="Güncelle" class="btn btn-primary" />
+        </div>
+    </form>
+    <div id="message" style="margin-top: 20px;"></div>
+</div>
+
+    @section scripts {
+        <script>
+        $(document).ready(function () {
+            $('#createForm').submit(function (e) {
+                e.preventDefault();
+                var formData = $(this).serialize();
+
+                $.ajax({
+                    url: '@Url.Action("Create", "Gorev")',
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#message').html('<div class="alert alert-success">' + response.message + '</div>');
+                            $('#createForm')[0].reset();
+                        } else {
+                            $('.text-danger').html('');
+                            $.each(response.errors, function (index, error) {
+                                $('span[data-valmsg-for="' + index + '"]').html(error);
+                            });
+
+                            $('#message').html('<div class="alert alert-danger">Lütfen formu kontrol edin.</div>');
+                        }
+                    },
+                    error: function () {
+                        $('#message').html('<div class="alert alert-danger">Bir hata oluştu.</div>');
+                    }
+                });
+            });
+        });
+        </script>
+    }
+}
+
+<div class="yenibuton">
+    <a href="@Url.Action("Index", "Gorev")" class="btn btn-primary">Görev Listesine Dön</a>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

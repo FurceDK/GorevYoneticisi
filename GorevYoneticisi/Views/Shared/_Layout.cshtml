@@ -1,0 +1,74 @@
+﻿@using GorevYoneticisi.Models
+@using System.Data.Entity
+
+@{
+    var db = new GorevContext();
+    var kullanicilar = db.User.ToList();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Görev Yönetim Sistemi</title>
+    <link rel="stylesheet" href="~/Content/Site.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            @if (Session["UserID"] != null)
+            {
+                <span>Merhaba, @Session["UserRole"]</span>
+
+                if (Session["UserRole"].ToString() == "Admin")
+                {
+                    <ul>
+                        <li>@Html.ActionLink("Görev Oluştur", "Create", "Gorev")</li>
+                        <li>@Html.ActionLink("Görevler", "Index", "Gorev")</li>
+                        <li>@Html.ActionLink("Arşivlenmiş Görevler", "Arsiv", "Gorev")</li>
+                        <li>@Html.ActionLink("Çıkış Yap", "Logout", "Hesap")</li>
+                    </ul>
+                }
+                else if (Session["UserRole"].ToString() == "Calisan")
+                {
+                    <ul>
+                        <li>@Html.ActionLink("Görevler", "Index", "Gorev")</li>
+                        <li>@Html.ActionLink("Arşivlenmiş Görevler", "Arsiv", "Gorev")</li>
+                        <li>@Html.ActionLink("Çıkış Yap", "Logout", "Hesap")</li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <ul>
+                    <li>@Html.ActionLink("Giriş Yap", "Login", "Hesap")</li>
+                    <li>@Html.ActionLink("Misafir Olarak Devam Et", "Index", "Gorev")</li>
+                </ul>
+            }
+        </nav>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+    <h3 class="ortala"> Bilinen Bug : Görev oluşturmada tarih olarak 10.10.1010 denedim ve hata aldım, tekrar deneme amaçlı 10.10.1000 denedim yine hata aldım. Fakat yıl olarak 2000'ler veya 3000'ler ile ilgili baya test yaptığımda hiç bir hata ile karşılaşmadım.</h3>
+    <h3 class="ortala"> Sql sunucu adı (local) olarak kayıtlı , farklı sql sunucularında hata verebilir. Web.config kısmından değiştirebilirsiniz.</h3>
+    <h3 class="ortala"> Sql ile bağlantı testi etmek için ve hesap bilgileri için:</h3>
+    <div>
+        <h3 class="textcenter">Veritabanındaki Kullanıcılar:</h3>
+        <h3 class="textcenter">Email - Şifre - Yetki seviyesi</h3>
+        <ul>
+            @foreach (var user in kullanicilar)
+            {
+                <p class="container">@user.UserEmail - @user.UserPassword -  @user.UserRank </p>
+            }
+        </ul>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

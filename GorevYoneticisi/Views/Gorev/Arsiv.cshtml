@@ -1,0 +1,51 @@
+﻿@model IEnumerable<GorevYoneticisi.Models.Gorev>
+@using GorevYoneticisi.Models
+
+
+<h2 class="ortala">Arşivlenmiş Görevler</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GorevAdi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Durum)
+            </th>
+            <th>
+                Arşivlenme Tarihi
+            </th>
+            @if (Session["UserRole"] != null && (Rank)Session["UserRole"] == Rank.Admin)
+            {
+                <th>İşlem</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GorevAdi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Durum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ArsivlenmeTarihi)
+                </td>
+                @if (Session["UserRole"] != null && (Rank)Session["UserRole"] == Rank.Admin)
+                {
+                    <td>
+                        @Html.ActionLink("Sil", "ArsivdenSil", new { id = item.GorevID }, new { @class = "btn btn-danger" })
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p class="ortala">
+    @Html.ActionLink("Görev Listesine Dön", "Index", "Gorev", null, new { @class = "btn btn-primary" })
+</p>
